@@ -3,42 +3,683 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Yertle — Quadruped Robot</title>
+  <title>QUADX — Intelligent Quadruped Robot</title>
+  <meta name="description" content="QUADX is a 12-DOF intelligent quadruped robot for locomotion, inverse kinematics, and dynamic balance. Graduation project, University of Aleppo, 2026." />
+  <link rel="icon" href="logo-aleppo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@600;700;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #111318;
-      --text: #eef1f6;
-      --muted: #9aa3b5;
+      --bg: #050805;
+      --bg-2: #0b120c;
+      --panel: #0e1610;
+      --line: #1f3d22;
+      --green: #39ff14;
+      --green-dim: #1a8f12;
+      --green-soft: rgba(57, 255, 20, 0.14);
+      --text: #f4f7f4;
+      --muted: #a8b8aa;
+      --max: 1120px;
     }
+
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background: var(--bg);
+      background:
+        radial-gradient(1200px 500px at 50% -10%, rgba(57, 255, 20, 0.08), transparent 55%),
+        linear-gradient(180deg, #070b07 0%, var(--bg) 40%);
       color: var(--text);
-      font-family: "Segoe UI", system-ui, sans-serif;
-      padding: 32px;
+      font-family: Inter, system-ui, sans-serif;
+      line-height: 1.6;
     }
-    main { max-width: 42rem; }
+
+    a { color: inherit; }
+
+    .wrap {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    /* Nav */
+    header.nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(14px);
+      background: rgba(5, 8, 5, 0.78);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 68px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .brand img {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid var(--green);
+      background: #fff;
+    }
+    .brand span {
+      font-family: Orbitron, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: var(--green);
+    }
+    nav.links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 18px;
+      font-family: Rajdhani, sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.95rem;
+    }
+    nav.links a {
+      text-decoration: none;
+      color: var(--muted);
+    }
+    nav.links a:hover { color: var(--green); }
+
+    /* Hero */
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 40px;
+      align-items: center;
+      padding: 56px 0 24px;
+    }
+    .kicker {
+      font-family: Rajdhani, sans-serif;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 10px;
+      font-size: 0.85rem;
+    }
     h1 {
-      margin: 0 0 8px;
-      font-size: clamp(2.4rem, 6vw, 4rem);
-      letter-spacing: -0.04em;
+      font-family: Orbitron, sans-serif;
+      font-size: clamp(3.2rem, 9vw, 6.4rem);
+      line-height: 0.9;
+      letter-spacing: 0.08em;
+      margin: 0;
+      color: var(--green);
+      text-shadow: 0 0 28px rgba(57, 255, 20, 0.28);
     }
-    p {
+    .subtitle {
+      font-family: Rajdhani, sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.1rem, 2.4vw, 1.55rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin: 12px 0 0;
+    }
+    .tagline {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 18px 0 28px;
+      color: var(--green);
+      font-family: Rajdhani, sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 0.92rem;
+    }
+    .tagline::before,
+    .tagline::after {
+      content: "";
+      height: 1px;
+      flex: 1;
+      background: var(--green-dim);
+    }
+    .uni {
       margin: 0;
       color: var(--muted);
-      font-size: 1.15rem;
-      line-height: 1.6;
+      font-size: 0.92rem;
+    }
+    .uni strong {
+      display: block;
+      color: var(--green);
+      font-weight: 600;
+    }
+    .stats {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+    .stat {
+      border: 1px solid var(--green);
+      padding: 10px 14px;
+      min-width: 108px;
+      background: var(--green-soft);
+    }
+    .stat b {
+      display: block;
+      font-family: Orbitron, sans-serif;
+      font-size: 1.05rem;
+      color: var(--green);
+    }
+    .stat span {
+      font-family: Rajdhani, sans-serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .hero-visual {
+      position: relative;
+    }
+    .hero-visual img {
+      width: 100%;
+      display: block;
+      filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.55));
+    }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 22px;
+      padding: 12px 18px;
+      border: 1px solid var(--green);
+      color: #041004;
+      background: var(--green);
+      text-decoration: none;
+      font-family: Rajdhani, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .cta:hover { filter: brightness(1.08); }
+    .cta-ghost {
+      background: transparent;
+      color: var(--green);
+      margin-left: 10px;
+    }
+
+    /* Panels */
+    section { padding: 28px 0; }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      padding: 22px;
+    }
+    .section-head {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(90deg, #2bd314, #14660e);
+      color: #fff;
+      padding: 8px 16px 8px 10px;
+      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%);
+      font-family: Rajdhani, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin: 0 0 16px;
+    }
+    .section-head svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 1.8; }
+
+    h2, h3 {
+      font-family: Rajdhani, sans-serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    p { color: var(--muted); }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 12px;
+    }
+    .list li {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+    .list .ico {
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--green);
+      color: var(--green);
+      display: grid;
+      place-items: center;
+      font-size: 0.72rem;
+    }
+    .list b {
+      display: block;
+      font-family: Rajdhani, sans-serif;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .list span { color: var(--muted); font-size: 0.92rem; }
+
+    /* Architecture */
+    .flow {
+      display: grid;
+      gap: 10px;
+    }
+    .flow-box {
+      border: 1px solid var(--green);
+      padding: 12px 14px;
+      background: rgba(57, 255, 20, 0.05);
+      text-align: center;
+      font-family: Rajdhani, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .flow-box small {
+      display: block;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      margin-top: 4px;
+    }
+    .arrow {
+      text-align: center;
+      color: var(--green);
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 8px;
+    }
+    .chip {
+      border: 1px solid var(--green-dim);
+      padding: 4px 8px;
+      font-size: 0.78rem;
+      color: var(--green);
+      font-family: Rajdhani, sans-serif;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* Video */
+    .video-wrap {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      border: 1px solid var(--green);
+      background:
+        radial-gradient(circle at center, rgba(57, 255, 20, 0.08), transparent 55%),
+        repeating-linear-gradient(0deg, rgba(57, 255, 20, 0.05) 0 1px, transparent 1px 28px),
+        repeating-linear-gradient(90deg, rgba(57, 255, 20, 0.05) 0 1px, transparent 1px 28px),
+        #070d08;
+      overflow: hidden;
+    }
+    .video-wrap iframe,
+    .video-wrap video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: none;
+    }
+    .video-wrap.has-media iframe,
+    .video-wrap.has-media video { display: block; }
+    .video-wrap.has-media .placeholder { display: none; }
+    .placeholder {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 24px;
+    }
+    .play {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      border: 2px solid var(--green);
+      background: rgba(5, 8, 5, 0.7);
+      color: var(--green);
+      display: grid;
+      place-items: center;
+      margin: 0 auto 14px;
+      box-shadow: 0 0 24px rgba(57, 255, 20, 0.25);
+    }
+    .play svg { width: 28px; height: 28px; margin-left: 4px; fill: var(--green); }
+    .placeholder h2 {
+      margin: 0 0 6px;
+      font-size: 1.4rem;
+    }
+    .placeholder p { margin: 0; }
+
+    /* Modes */
+    .modes {
+      display: grid;
+      gap: 12px;
+    }
+    .mode {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 12px;
+      align-items: center;
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+    }
+    .mode .num {
+      font-family: Orbitron, sans-serif;
+      color: var(--green);
+      border: 1px solid var(--green);
+      text-align: center;
+      padding: 8px 0;
+    }
+    .mode h3 { margin: 0; font-size: 1rem; }
+    .mode p { margin: 2px 0 0; font-size: 0.92rem; }
+
+    /* Software */
+    .soft {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .soft article {
+      border: 1px solid var(--line);
+      padding: 16px 12px;
+      text-align: center;
+      min-height: 108px;
+    }
+    .soft b {
+      display: block;
+      font-family: Rajdhani, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 8px;
+    }
+    .soft span { color: var(--muted); font-size: 0.85rem; }
+    .mark {
+      font-family: Orbitron, sans-serif;
+      color: var(--green);
+      font-size: 1.1rem;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      margin-top: 24px;
+      padding: 22px 0 36px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+    footer .foot {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 22px;
+      justify-content: space-between;
+    }
+    .pulse {
+      color: var(--green);
+      letter-spacing: 0.2em;
+    }
+
+    @media (max-width: 900px) {
+      .hero, .grid-2, .grid-3, .soft { grid-template-columns: 1fr; }
+      .cta-ghost { margin-left: 0; margin-top: 10px; }
+      nav.links { display: none; }
     }
   </style>
 </head>
 <body>
-  <main>
-    <h1>Yertle</h1>
-    <p>A 3D-printed quadrupedal robot for locomotion research. Media coming soon.</p>
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top">
+        <img src="logo-aleppo.png" alt="University of Aleppo" />
+        <span>QUADX</span>
+      </a>
+      <nav class="links" aria-label="Page">
+        <a href="#about">About</a>
+        <a href="#video">Video</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#hardware">Hardware</a>
+        <a href="#control">Control</a>
+        <a href="#software">Software</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="wrap hero">
+      <div>
+        <p class="kicker">University of Aleppo · Graduation Project 2026</p>
+        <h1>QUADX</h1>
+        <p class="subtitle">Intelligent Quadruped Robot</p>
+        <p class="tagline">Engineered to move. Designed to adapt.</p>
+        <p class="uni">
+          Faculty of Electrical &amp; Electronic Engineering
+          <strong>Department of Mechatronics Engineering</strong>
+        </p>
+        <div class="stats">
+          <div class="stat"><b>12 DOF</b><span>Degrees of freedom</span></div>
+          <div class="stat"><b>4 LEGS</b><span>Independent control</span></div>
+          <div class="stat"><b>3 JOINTS</b><span>Per leg</span></div>
+        </div>
+        <a class="cta" href="#video">Watch the project</a>
+        <a class="cta cta-ghost" href="#about">Explore QUADX</a>
+      </div>
+      <div class="hero-visual">
+        <img src="robot-hero.png" alt="QUADX quadruped robot" />
+      </div>
+    </section>
+
+    <section class="wrap" id="about">
+      <div class="panel">
+        <h2 class="section-head">
+          <svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16" /><path d="M8 8h8M8 12h8M8 16h5" /></svg>
+          About the project
+        </h2>
+        <p>QUADX is a four-legged robotic platform designed to explore intelligent locomotion, motion control, and dynamic balance.</p>
+        <p>The robot combines a 12-DOF servo-driven mechanism with inverse kinematics, inertial sensing, balance control, and gait generation to achieve controlled and coordinated leg movements.</p>
+        <p>QUADX provides a flexible platform for developing and testing advanced quadruped robotics algorithms.</p>
+      </div>
+    </section>
+
+    <section class="wrap" id="video">
+      <div class="panel">
+        <h2 class="section-head">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" /><path d="M10 9l6 3-6 3z" /></svg>
+          Project video
+        </h2>
+        <p>Watch QUADX in action. Drop in a local file or YouTube embed when the recording is ready.</p>
+        <!-- Replace the placeholder: add class "has-media" to .video-wrap and uncomment iframe or video. -->
+        <div class="video-wrap" aria-label="Video placeholder">
+          <!-- <iframe src="https://www.youtube.com/embed/VIDEO_ID" title="QUADX project video" allowfullscreen></iframe> -->
+          <!-- <video src="quadx.mp4" controls playsinline></video> -->
+          <div class="placeholder">
+            <div>
+              <div class="play" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+              </div>
+              <h2>Video coming soon</h2>
+              <p>Placeholder for the project demonstration.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap grid-3" id="architecture">
+      <article class="panel">
+        <h2 class="section-head">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M12 3v3M12 18v3M3 12h3M18 12h3" /></svg>
+          System architecture
+        </h2>
+        <div class="flow">
+          <div class="flow-box">User command<small>GUI / UDP / Serial</small></div>
+          <div class="arrow">↓</div>
+          <div class="flow-box">
+            Control &amp; algorithms
+            <div class="chips">
+              <span class="chip">Inverse kinematics</span>
+              <span class="chip">Gait generation</span>
+              <span class="chip">Balance PID</span>
+              <span class="chip">Motion control</span>
+            </div>
+          </div>
+          <div class="arrow">↓</div>
+          <div class="flow-box">Actuation layer<small>12× servos · 2× PCA9685</small></div>
+          <div class="arrow">↓</div>
+          <div class="flow-box">Robot motion</div>
+        </div>
+      </article>
+
+      <article class="panel" id="features">
+        <h2 class="section-head">
+          <svg viewBox="0 0 24 24"><path d="M12 3l2.2 6.6H21l-5.4 4 2.1 6.4L12 16.5 6.3 20l2.1-6.4L3 9.6h6.8z" /></svg>
+          Project features
+        </h2>
+        <ul class="list">
+          <li><span class="ico">01</span><div><b>12-DOF platform</b><span>Four legs, three joints each</span></div></li>
+          <li><span class="ico">02</span><div><b>Inverse kinematics</b><span>Joint angles from foot targets</span></div></li>
+          <li><span class="ico">03</span><div><b>Independent leg control</b><span>Per-limb Cartesian motion</span></div></li>
+          <li><span class="ico">04</span><div><b>Foot position control</b><span>X / Y / Z workspace</span></div></li>
+          <li><span class="ico">05</span><div><b>IMU balance</b><span>Orientation feedback</span></div></li>
+          <li><span class="ico">06</span><div><b>PID controller</b><span>Pitch and roll stability</span></div></li>
+          <li><span class="ico">07</span><div><b>Gait generation</b><span>Coordinated walking patterns</span></div></li>
+        </ul>
+      </article>
+
+      <article class="panel" id="hardware">
+        <h2 class="section-head">
+          <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" /><path d="M9 9h6v6H9z" /></svg>
+          Hardware
+        </h2>
+        <ul class="list">
+          <li><span class="ico">IC</span><div><b>ESP32</b><span>Main controller</span></div></li>
+          <li><span class="ico">12</span><div><b>Servo motors</b><span>High-torque digital servos</span></div></li>
+          <li><span class="ico">2×</span><div><b>PCA9685</b><span>16-channel servo drivers</span></div></li>
+          <li><span class="ico">6A</span><div><b>IMU (MPU6050)</b><span>6-axis motion sensor</span></div></li>
+          <li><span class="ico">Li</span><div><b>Li-ion battery</b><span>Onboard power supply</span></div></li>
+          <li><span class="ico">FR</span><div><b>Custom frame</b><span>Lightweight mechanical body</span></div></li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="wrap grid-2" id="control">
+      <article class="panel">
+        <h2 class="section-head">
+          <svg viewBox="0 0 24 24"><path d="M4 14h4v6H4zM10 8h4v12h-4zM16 4h4v16h-4z" /></svg>
+          Control system
+        </h2>
+        <p>Transforms high-level commands into smooth and stable motion. IMU feedback is processed by the PID controller to compensate pitch (Y) and roll (X) in real time.</p>
+        <div class="flow" style="margin-top:16px">
+          <div class="flow-box">User command</div>
+          <div class="arrow">↓</div>
+          <div class="flow-box">Body / foot position</div>
+          <div class="arrow">↓</div>
+          <div class="flow-box">Inverse kinematics</div>
+          <div class="arrow">↓</div>
+          <div class="flow-box">Joint angles → servo control</div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <h2 class="section-head">
+          <svg viewBox="0 0 24 24"><path d="M4 16c3-8 13-8 16 0" /><circle cx="7" cy="16" r="2" /><circle cx="17" cy="16" r="2" /></svg>
+          Motion modes
+        </h2>
+        <div class="modes">
+          <div class="mode">
+            <div class="num">01</div>
+            <div><h3>Servo control</h3><p>Direct joint-angle commands.</p></div>
+          </div>
+          <div class="mode">
+            <div class="num">02</div>
+            <div><h3>Foot position</h3><p>Cartesian X, Y, Z foot targets.</p></div>
+          </div>
+          <div class="mode">
+            <div class="num">03</div>
+            <div><h3>Body control</h3><p>Translate and rotate the body.</p></div>
+          </div>
+          <div class="mode">
+            <div class="num">04</div>
+            <div><h3>Gait control</h3><p>Coordinated walking patterns.</p></div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="wrap" id="sim">
+      <div class="panel">
+        <h2 class="section-head">
+          <svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z" /><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5" /></svg>
+          Simulation &amp; digital twin
+        </h2>
+        <p>Test motions, gaits, and balance in PyBullet before deploying on the real robot. The same control stack drives both the digital twin and the hardware.</p>
+        <div class="grid-2" style="margin-top:16px">
+          <div class="flow-box">Simulation<small>PyBullet digital twin</small></div>
+          <div class="flow-box">Real robot<small>ESP32 + servos + IMU</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap" id="software">
+      <div class="panel">
+        <h2 class="section-head">
+          <svg viewBox="0 0 24 24"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13 6l-2 12" /></svg>
+          Software
+        </h2>
+        <div class="soft">
+          <article><div class="mark">ESP32</div><b>Arduino firmware</b><span>Hardware &amp; sensors</span></article>
+          <article><div class="mark">PY</div><b>Python control GUI</b><span>Host application</span></article>
+          <article><div class="mark">TK</div><b>Tkinter interface</b><span>Operator console</span></article>
+          <article><div class="mark">PB</div><b>PyBullet sim</b><span>Digital twin</span></article>
+          <article><div class="mark">IK</div><b>Inverse kinematics</b><span>Leg solver</span></article>
+          <article><div class="mark">PID</div><b>Balance control</b><span>IMU closed loop</span></article>
+          <article><div class="mark">UDP</div><b>Wi-Fi / UDP</b><span>Wireless command</span></article>
+          <article><div class="mark">I/O</div><b>Serial interface</b><span>USB debug link</span></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <div class="panel" style="text-align:center">
+        <h2 class="section-head" style="clip-path:none">Project developer</h2>
+        <p class="subtitle" style="letter-spacing:0.08em;margin-top:8px">Al-Mu'ayyad Billah Muhammad Al-Hamidi</p>
+        <p>Mechatronics Engineering · University of Aleppo · 2026</p>
+      </div>
+    </section>
   </main>
+
+  <footer>
+    <div class="wrap foot">
+      <div>University of Aleppo · Aleppo, Syria</div>
+      <div>Faculty of Electrical &amp; Electronic Engineering</div>
+      <div>Department of Mechatronics Engineering</div>
+      <div class="pulse">QUADX</div>
+    </div>
+  </footer>
 </body>
 </html>
